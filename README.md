@@ -60,11 +60,9 @@ Each argument of facts_search must have two or three elements. The first argumen
 
 ## Getting started
 
-Install the module using Distutils.
+Install the module using pip.
 
-    $ git clone https://github.com/daradib/pypuppet.git
-    $ cd pypuppet
-    $ python setup.py install
+    $ pip install https://github.com/daradib/pypuppet/archive/master.tar.gz
 
 Alternatively, you can move the puppet directory to your Python PATH or wherever a script that imports it will be located. The only dependency is [PyYAML](http://pyyaml.org/).
 
