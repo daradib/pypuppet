@@ -24,7 +24,7 @@ Replace puppet.example.com with the hostname of the puppet master and api-key.pe
     'certificate_status', 'certname', 'classes', 'environment', 'facts',
     'node', 'parameters', 'requestor']
 
-Replace magicsmoke.example.com with the certname of a puppet node.
+Replace magicsmoke.example.com with the name of a puppet node. If a node is not found, `puppet.APIError` will be raised.
 
 Each Node object consists of attributes, lazy-evaluated attributes, and methods.
 
@@ -45,13 +45,19 @@ Methods:
 
 ### Methods
 
-In addition to the Node class, there are two methods in the Puppet object:
- * `facts_search`: list certnames matching arguments of fact comparisons
- * `list_nodes`: list all known certnames based on signed certificates and cached facts
+In addition to the node method which creates a Node object, there are two other methods in the Puppet object:
+ * `certificates`: list certnames of known SSL certificates
+ * `certificate_requests`: list certnames of SSL certificate requests
+ * `facts_search`: list nodes matching arguments of fact comparisons
 
-Note that these methods return lists of certname strings, not lists of Node objects (which would be an expensive API call).
+Note that these methods return lists of strings, not lists of Node objects (which would be an expensive API call). However, each string can be directly passed as the argument to the node method to create a Node object.
 
-Each argument of facts_search must have two or three elements. The first argument is the name of the fact and the last argument is the string for comparison. If three arguments are provided, the second argument is the comparison type. The arguments are combined with boolean AND. Refer to the Puppet REST API documentation on [facts search](http://docs.puppetlabs.com/guides/rest_api.html#facts-search).
+    > n = p.node(p.certificates()[0])
+    > all_my_nodes = [p.node(certname) for certname in p.facts_search()]
+
+A `try-except puppet.APIError` code block should probably be used to handle exceptions.
+
+Each argument of `facts_search` must have two or three elements. The first argument is the name of the fact and the last argument is the string for comparison. If three arguments are provided, the second argument is the comparison type. The arguments are combined with boolean AND. Refer to the Puppet REST API documentation on [facts search](http://docs.puppetlabs.com/guides/rest_api.html#facts-search).
 
     > print p.facts_search(('architecture', 'amd64'),('osfamily', 'Debian'))
     [...]
