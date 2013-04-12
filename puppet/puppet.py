@@ -45,6 +45,6 @@ class Puppet(object):
             query.append('facts.' + fact + '.' + comparison + '=' + value)
         return self.requestor.get('facts_search', 'search?' + '&'.join(query))
 
-    def node(self, certname, environment=None):
+    def node(self, certname, environment='production'):
         """Create Puppet Node object"""
         return Node(self.requestor, certname=certname, environment=environment)

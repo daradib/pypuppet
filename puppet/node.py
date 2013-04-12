@@ -4,18 +4,12 @@ from .utils import Lazy, Memoize
 class Node:
     """Puppet Node object with some lazy-evaluated attributes"""
 
-    def __init__(self, requestor, certname, environment=None):
+    def __init__(self, requestor, certname, environment):
         self.requestor = requestor
-        if environment is None:
-            # Use the default production environment because the node dict
-            # is not apparently dependent on the environment we specify,
-            # perhaps because of the ENC
-            node = self.requestor.get('node', certname, environment='production')
-            environment = node['environment']
-        else:
-            node = self.requestor.get('node', certname, environment=environment)
         self.certname = certname
-        self.environment = environment
+        node = self.requestor.get('node', certname, environment=environment)
+        # ENC or node terminus can override environment in returned node object
+        self.environment = node['environment']
         self.node = node
         self.classes = node['classes']
         self.facts = node['facts']['values']

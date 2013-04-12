@@ -24,7 +24,7 @@ Replace puppet.example.com with the hostname of the puppet master and api-key.pe
     'certificate_status', 'certname', 'classes', 'environment', 'facts',
     'node', 'parameters', 'requestor']
 
-Replace magicsmoke.example.com with the name of a puppet node. If a node is not found, `puppet.APIError` will be raised.
+Replace magicsmoke.example.com with the name of a puppet node. An optional environment argument can also be provided. Note that external node classifiers can override the environment in the Node object. If a node is not found, `puppet.APIError` will be raised.
 
 Each Node object consists of attributes, lazy-evaluated attributes, and methods.
 
