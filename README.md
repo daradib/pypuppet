@@ -22,7 +22,7 @@ Replace puppet.example.com with the hostname of the puppet master and api-key.pe
     > print dir(n)
     ['__doc__', '__init__', '__module__', 'catalog', 'certificate',
     'certificate_status', 'certname', 'classes', 'environment', 'facts',
-    'node', 'parameters', 'report', 'requestor']
+    'node', 'parameters', 'requestor']
 
 Replace magicsmoke.example.com with the certname of a puppet node.
 
