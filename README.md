@@ -11,10 +11,10 @@ Kudos to my employer, [Kloudless](http://kloudless.com/), for giving me permissi
 ## Usage
 
     > import puppet
-    > p = puppet.Puppet(host='puppet.example.com', key_file='api-key.pem',
-          cert_file='api-cert.pem')
+    > p = puppet.Puppet(host='puppet.example.com', port=8140,
+          key_file='api-key.pem', cert_file='api-cert.pem')
 
-Replace puppet.example.com with the hostname of the puppet master and api-key.pem/api-cert.pem with the client SSL key/certificate files.
+Replace puppet.example.com with the hostname of the puppet master and api-key.pem/api-cert.pem with the client SSL key/certificate files. The default arguments are `localhost, 8140, None, None` (unauthenticated SSL connection to localhost).
 
 ### Node object
 
@@ -66,15 +66,15 @@ Install the module using pip.
 
 Alternatively, you can move the puppet directory to your Python PATH or wherever a script that imports it will be located. The only dependency is [PyYAML](http://pyyaml.org/).
 
-The module defaults to using a SSL key and certificate called puppet in `/var/lib/puppet/ssl`. You will probably want to create and use a different certificate. On the puppet master:
+The module defaults to using an unauthenticated SSL connection. You may want to create and use a client SSL key/certificate signed by the Puppet CA. On the puppet master (with root privileges):
 
-    $ sudo puppet cert generate api
+    $ puppet cert generate api
 
 Replace api with another certname if desired.
 
 This will generate `$vardir/ssl/private_keys/api.pem` and `$vardir/ssl/certs/api.pem`, which should be moved or otherwise made accessible to the user and host using pypuppet, if necessary. On Debian, `$vardir` defaults to `/var/lib/puppet`.
 
-To allow access to the REST API using the generated SSL key/certificate, the puppet master [auth.conf](http://docs.puppetlabs.com/guides/rest_auth_conf.html) file needs to be changed. `auth.conf.example` is included in this directory as an example.
+To allow access to the REST API, the puppet master [auth.conf](http://docs.puppetlabs.com/guides/rest_auth_conf.html) file needs to be changed. `auth.conf.example` is included in this directory as an example.
 
 ## Caveats
 

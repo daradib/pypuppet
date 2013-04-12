@@ -1,70 +1,56 @@
-# Modified from defaults to allow REST API access for pypuppet
-# Replace api with the name of the SSL certificate used by pypuppet
-# Puppet docs: http://docs.puppetlabs.com/guides/rest_auth_conf.html
+### Example puppet master REST API ACL
+### Puppet docs: http://docs.puppetlabs.com/guides/rest_auth_conf.html
 
-### Authenticated paths - these apply only when the client
-### has a valid certificate and is thus authenticated
+### Example for UNAUTHENTICATED connection from 127.0.0.1 (localhost)
 
-# allow pypuppet to check list of certificates
-path /certificate_status
-method find, search
-allow api
-
-# allow nodes and pypuppet to store and retrieve facts
-path ~ ^/facts/([^/]+)$
-method find, search, save
+path ~ ^/catalog/([^/]+)$
+auth any
+method find
 allow $1
-allow api
+allow_ip 127.0.0.1
 
-# allow nodes and pypuppet to retrive catalogs
+path /certificate_request
+auth any
+method find, search, save
+allow *
+
+path /certificate_status
+auth any
+method find, search
+allow_ip 127.0.0.1
+
+path /facts
+auth any
+method search
+allow_ip 127.0.0.1
+
+path ~ ^/node/([^/]+)$
+auth any
+method find
+allow $1
+allow_ip 127.0.0.1
+
+### Example for AUTHENTICATED connection using client SSL cert "api"
+
 path ~ ^/catalog/([^/]+)$
 method find
 allow $1
 allow api
 
-# allow nodes and pypuppet to retrieve node definitions
+path /certificate_request
+auth any
+method find, search, save
+allow *
+
+path /certificate_status
+method find, search
+allow api
+
+path /facts
+method search
+allow api
+
 path ~ ^/node/([^/]+)$
 method find
 allow $1
 allow api
-
-# allow all nodes to access the certificates services
-path /certificate_revocation_list/ca
-method find
-allow *
-
-# allow all nodes to store their reports
-path /report
-method save
-allow *
-
-# unconditionally allow access to all file services
-# which means in practice that fileserver.conf will
-# still be used
-path /file
-allow *
-
-### Unauthenticated ACL, for clients for which the current master doesn't
-### have a valid certificate; we allow authenticated users, too, because
-### there isn't a great harm in letting that request through.
-
-# allow access to the master CA
-path /certificate/ca
-auth any
-method find
-allow *
-
-path /certificate/
-auth any
-method find
-allow *
-
-path /certificate_request
-auth any
-method find, save
-allow *
-
-# this one is not stricly necessary, but it has the merit
-# of showing the default policy, which is deny everything else
-path /
-auth any
