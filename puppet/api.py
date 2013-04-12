@@ -41,7 +41,7 @@ class Requestor(object):
         self.endpoint = 'https://' + host + ':' + str(port)
         self.opener = urllib2.build_opener(HTTPSClientAuthHandler(
             key_file, cert_file))
-    def get(self, resource, key, environment='production', parser='yaml'):
+    def get(self, resource, key='no_key', environment='production', parser='yaml'):
         """Query Puppet information using REST API and client SSL cert"""
         url = '/'.join((self.endpoint, environment, resource, key))
         request = urllib2.Request(url)

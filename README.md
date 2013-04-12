@@ -64,6 +64,21 @@ Each argument of `facts_search` must have two or three elements. The first argum
     > print p.facts_search(('uptime_days', 'gt', '30'))
     [...]
 
+### Requestor object
+
+Direct invocation of the API can be done using the Requestor object's `get` method, which takes four arguments:
+
+ * `resource` (required)
+ * `key` (default: `'no_key'`)
+ * `environment` (default: `'production'`)
+ * `parser`: `yaml` (default), `pson`, or `s`
+
+Some examples based on the [Puppet REST API documentation](http://docs.puppetlabs.com/guides/rest_api.html):
+
+    > p.requestor.get('resource', 'package/puppet')
+    > p.requestor.get('resources', 'user')
+    > p.requestor.get('certificate_revocation_list', 'ca', parser='s')
+
 ## Getting started
 
 Install the module using pip.
@@ -90,7 +105,6 @@ Bugs:
 
 Not currently supported:
  * PUT requests (sending and signing certificate requests, sending facts and reports, putting files in the file bucket) and DELETE requests (revoking certificate requests)
- * puppet agent API
 
 ## Author
 
