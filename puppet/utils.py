@@ -10,6 +10,8 @@ class Memoize:
         if key not in self.cache:
             self.cache[key] = self.f(*args, **kwargs)
         return self.cache[key]
+    def __repr__(self):
+        return self.f.__doc__
 
 class Lazy(object):
     """Lazy attribute evaluation decorator class"""
