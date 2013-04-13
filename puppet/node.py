@@ -12,7 +12,10 @@ class Node:
         self.environment = node['environment']
         self.node = node
         self.classes = node['classes']
-        self.facts = node['facts']['values']
+        if node['facts']:
+            self.facts = node['facts']['values']
+        else:
+            self.facts = {}
         self.parameters = node['parameters']
 
     def __str__(self):
