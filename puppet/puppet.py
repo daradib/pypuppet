@@ -1,6 +1,5 @@
 from .api import Requestor
 from .node import Node
-from .utils import Lazy
 
 class Puppet(object):
     """Python wrapper for Puppet REST API"""
