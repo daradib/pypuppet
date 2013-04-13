@@ -15,6 +15,9 @@ class Node:
         self.facts = node['facts']['values']
         self.parameters = node['parameters']
 
+    def __str__(self):
+        return self.certname
+
     def catalog(self):
         """Compile and download the node's catalog"""
         # Catalog is not parsable by PyYAML, use JSON instead
