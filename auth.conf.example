@@ -21,7 +21,7 @@ allow_ip 127.0.0.1
 
 path /facts
 auth any
-method search
+method find, search
 allow_ip 127.0.0.1
 
 path ~ ^/node/([^/]+)$
@@ -47,7 +47,7 @@ method find, search
 allow api
 
 path /facts
-method search
+method find, search
 allow api
 
 path ~ ^/node/([^/]+)$
