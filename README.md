@@ -104,7 +104,7 @@ In addition to the node method which creates a Node instance, there are three ot
 Note that these methods return lists of strings, not lists of Node objects (which would be an expensive API call). 
 
     >>> [type(certnames[0]) for certnames in (p.certificates(),
-    ... p.facts_search())]
+    ... p.facts_search(('processorcount', 'ge', '1')))]
     [<type 'str'>, <type 'str'>]
 
 However, each string can be directly passed as the argument to the node method to create a Node object. A `try-except` code block is recommended to gracefully handle exceptions caused by non-existent nodes.
