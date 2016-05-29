@@ -10,7 +10,7 @@ class Puppet(object):
 
         if cache_enabled:
             import requests_cache
-            requests_cache.install_cache(cache_file)
+            requests_cache.install_cache(cache_file, backend=cache_backend, expire_after=cache_expire_after)
 
         self.requestor = Requestor(host=host, port=port, key_file=key_file, 
             cert_file=cert_file, parser=parser, ssl_verify=ssl_verify)
