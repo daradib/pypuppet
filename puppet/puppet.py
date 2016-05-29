@@ -4,10 +4,16 @@ from .node import Node
 class Puppet(object):
     """Python wrapper for Puppet REST API"""
 
-    def __init__(self, host='localhost', port=8140, key_file=None,
-        cert_file=None):
+    def __init__(self, host='localhost', port=8140, parser='yaml',
+        key_file=None, cert_file=None, ssl_verify=True, cache_enabled=True,
+        cache_file='/tmp/pypuppet_cache', cache_backend='sqlite', cache_expire_after=3600):
+
+        if cache_enabled:
+            import requests_cache
+            requests_cache.install_cache(cache_file)
+
         self.requestor = Requestor(host=host, port=port, key_file=key_file, 
-            cert_file=cert_file)
+            cert_file=cert_file, parser=parser, ssl_verify=ssl_verify)
 
     def certificates(self):
         """List certnames of known SSL certificates"""
@@ -22,6 +28,9 @@ class Puppet(object):
         for cert in self.requestor.get('certificate_requests', 'no_key'):
             certnames.append(cert['name'])
         return certnames
+
+    def test(self):
+        return 'hi'
 
     # TODO: Need to use REST API instead of subprocess call on puppetmaster
     # def clean_node(requestor, certname):

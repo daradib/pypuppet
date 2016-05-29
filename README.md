@@ -2,7 +2,7 @@
 
 Python wrapper for Puppet REST API
 
-This package wraps the [Puppet REST API](http://docs.puppetlabs.com/guides/rest_api.html) to make it easier for Python scripts to integrate with Puppet. Lazy evaluation and memoization is used to reduce calls to the API.
+This package wraps the [Puppet REST API](http://docs.puppetlabs.com/guides/rest_api.html) to make it easier for Python scripts to integrate with Puppet. Persistent cache is used to reduce calls to the API.
 
 Testing, feedback, and pull requests are welcome.
 
@@ -15,10 +15,20 @@ Kudos to my employer, [Kloudless](http://kloudless.com/), for giving me permissi
 
 By default, the Puppet instance will use an unauthenticated SSL connection to localhost. A better example would be to use client authentication.
 
-    >>> p = puppet.Puppet(host='puppet.example.com', port=8140,
-    ... key_file='api-key.pem', cert_file='api-cert.pem')
+    >>> p = puppet.Puppet(host='puppet.example.com',
+    ... port=8140,
+    ... parser='yaml',
+    ... key_file='api-key.pem',
+    ... cert_file='api-cert.pem',
+    ... ssl_verify=True,
+    ... cache_enabled=True,
+    ... cache_file='/tmp/pypuppet_cache',
+    ... cache_backend='sqlite',
+    ... cache_expire_after=3600)
 
 Replace puppet.example.com with the hostname of the puppet master and api-key.pem/api-cert.pem with the client SSL key/certificate files.
+SSL verification is enabled by default.
+Cache is enabled by default with multiple backend options (sqlite (default), memory, mongodb, redis). Default cache file will be stored at /tmp/pypuppet_cache.sqlite
 
 ### Node object
 
@@ -128,16 +138,15 @@ Each argument (if provided) of `facts_search` must have two or three elements. T
 
 ### Requestor object
 
-Direct invocation of the API can be done using the Requestor object's `get` method, which takes four arguments:
+Direct invocation of the API can be done using the Requestor object's `get` method, which takes three arguments:
 
  * `resource` (required)
  * `key` (default: `'no_key'`)
  * `environment` (default: `'production'`)
- * `parser`: `yaml` (default), `pson`, or `s`
 
 For example:
 
-    >>> crl = p.requestor.get('certificate_revocation_list', 'ca', parser='s')
+    >>> crl = p.requestor.get('certificate_revocation_list', 'ca')
     >>> type(crl)
     <type 'str'>
     >>> crl.startswith('-----BEGIN X509 CRL')
@@ -167,11 +176,6 @@ This will generate `$vardir/ssl/private_keys/api.pem` and `$vardir/ssl/certs/api
 To allow access to the REST API, the puppet master [auth.conf](http://docs.puppetlabs.com/guides/rest_auth_conf.html) file needs to be changed. `auth.conf.example` is included in this directory as an example.
 
 ## Caveats
-
-Bugs:
-
- * Memoization is rudimentary. Stale information is kept indefinitely (in the current Python process).
- * There is no verification of the server SSL certificate.
 
 Not currently supported:
 

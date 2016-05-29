@@ -1,6 +1,3 @@
-from .utils import Lazy, Memoize
-
-@Memoize
 class Node:
     """Puppet Node object with some lazy-evaluated attributes"""
 
@@ -28,13 +25,11 @@ class Node:
             'catalog', self.certname, environment=self.environment,
             parser='pson')['data']
 
-    @Lazy
     def certificate(self):
         return str(self.requestor.get(
             'certificate', self.certname, environment=self.environment,
             parser='s'))
 
-    @Lazy
     def certificate_status(self):
         # YAML output is not as useful as PSON
         return str(self.requestor.get('certificate_status', self.certname,
