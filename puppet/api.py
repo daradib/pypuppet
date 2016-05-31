@@ -42,7 +42,7 @@ class Requestor(object):
         url = '/'.join((self.endpoint, environment, resource, key))
 
         try:
-            req = self._session.get(url, cert=(self.cert_file, self.key_file))
+            req = self._session.get(url, cert=(self.cert_file, self.key_file), verify=self.ssl_verify)
 
             if req.status_code == 200:
                 if self.parser == 'yaml':
