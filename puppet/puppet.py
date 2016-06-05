@@ -4,8 +4,8 @@ from .node import Node
 class Puppet(object):
     """Python wrapper for Puppet REST API"""
 
-    def __init__(self, host='localhost', port=8140, parser='yaml',
-        key_file=None, cert_file=None, ssl_verify=True, cache_enabled=True,
+    def __init__(self, host='localhost', port=8140, key_file=None,
+        cert_file=None, parser='yaml', ssl_verify=True, cache_enabled=True,
         cache_file='/tmp/pypuppet_cache', cache_backend='sqlite', cache_expire_after=3600):
 
         if cache_enabled:

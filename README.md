@@ -17,9 +17,9 @@ By default, the Puppet instance will use an unauthenticated SSL connection to lo
 
     >>> p = puppet.Puppet(host='puppet.example.com',
     ... port=8140,
-    ... parser='yaml',
     ... key_file='api-key.pem',
     ... cert_file='api-cert.pem',
+    ... parser='yaml',
     ... ssl_verify=True,
     ... cache_enabled=True,
     ... cache_file='/tmp/pypuppet_cache',
