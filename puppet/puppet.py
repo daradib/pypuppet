@@ -29,9 +29,6 @@ class Puppet(object):
             certnames.append(cert['name'])
         return certnames
 
-    def test(self):
-        return 'hi'
-
     # TODO: Need to use REST API instead of subprocess call on puppetmaster
     # def clean_node(requestor, certname):
     #     """Revoke certificate and remove knowledge of a Puppet node"""
