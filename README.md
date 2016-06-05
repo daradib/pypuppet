@@ -185,6 +185,10 @@ Not currently supported:
 
 [Dara Adib](http://github.com/daradib/) for [Kloudless, Inc.](http://kloudless.com/)
 
+## Contributors
+
+[Ruslan Valiyev](http://github.com/norus/)
+
 ## License
 
 Copyright 2012-2013 Kloudless, Inc.
