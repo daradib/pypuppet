@@ -15,11 +15,10 @@ Kudos to my employer, [Kloudless](http://kloudless.com/), for giving me permissi
 
 By default, the Puppet instance will use an unauthenticated SSL connection to localhost. A better example would be to use client authentication.
 
-    >>> p = puppet.Puppet(host='puppet.example.com',
+    >>> p = puppet.Puppet(host='puppetmaster.foo.com',
     ... port=8140,
-    ... key_file='api-key.pem',
-    ... cert_file='api-cert.pem',
-    ... parser='yaml',
+    ... key_file='/tmp/api-key.pem',
+    ... cert_file='/tmp/api-cert.pem',
     ... ssl_verify=True,
     ... cache_enabled=True,
     ... cache_file='/tmp/pypuppet_cache',
@@ -32,29 +31,29 @@ Cache is enabled by default with multiple backend options (sqlite (default), mem
 
 ### Node object
 
-Given a puppet node called magicsmoke.example.com,
+Given a puppet node called puppetnode.foo.com,
 
-    >>> n = p.node('magicsmoke.example.com')
+    >>> n = p.node('puppetnode.foo.com')
     >>> str(n)
-    'magicsmoke.example.com'
+    'puppetnode.foo.com'
     >>> dir(n)
     ['__doc__', '__init__', '__module__', '__str__', 'catalog', 'certificate', 'certificate_status', 'certname', 'classes', 'environment', 'facts', 'node', 'parameters', 'requestor']
 
 An optional node environment argument can be provided. Note that [external node classifiers](http://docs.puppetlabs.com/guides/external_nodes.html) may [override the requested environment](http://docs.puppetlabs.com/guides/environment.html#in-an-enc).
 
-    >>> n_dev = p.node('magicsmoke.example.com', environment='dev')
+    >>> n_dev = p.node('puppetnode.foo.com', environment='production')
 
 If a node is not found, `puppet.APIError` will be raised.
 
 #### `certname`
 
     >>> n.certname
-    'magicsmoke.example.com'
+    'puppetnode.foo.com'
 
 #### `classes`
 
     >>> type(n.classes)
-    <type 'list'>
+    <type 'dict'>
 
 #### `environment`
 
@@ -66,7 +65,7 @@ If a node is not found, `puppet.APIError` will be raised.
     >>> type(n.facts)
     <type 'dict'>
     >>> n.facts['osfamily'] + "-" + n.facts['architecture']
-    'Debian-amd64'
+    'RedHat-x86_64'
 
 #### `node`
 
@@ -83,15 +82,15 @@ If a node is not found, `puppet.APIError` will be raised.
 #### `certificate`
 *lazy-evaluated*
 
-    >>> type(n.certificate)
+    >>> type(n.certificate())
     <type 'str'>
-    >>> n.certificate.startswith('-----BEGIN CERTIFICATE')
+    >>> n.certificate().startswith('-----BEGIN CERTIFICATE')
     True
 
 #### `certificate_status`
 *lazy-evaluated*
 
-    >>> n.certificate_status
+    >>> n.certificate_status()
     'signed'
 
 #### `catalog`
@@ -143,10 +142,11 @@ Direct invocation of the API can be done using the Requestor object's `get` meth
  * `resource` (required)
  * `key` (default: `'no_key'`)
  * `environment` (default: `'production'`)
+ * `parser` (default: `'s'`)
 
 For example:
 
-    >>> crl = p.requestor.get('certificate_revocation_list', 'ca')
+    >>> crl = p.requestor.get('certificate_revocation_list', 'ca', parser='s')
     >>> type(crl)
     <type 'str'>
     >>> crl.startswith('-----BEGIN X509 CRL')

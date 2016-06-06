@@ -5,7 +5,7 @@ class Puppet(object):
     """Python wrapper for Puppet REST API"""
 
     def __init__(self, host='localhost', port=8140, key_file=None,
-        cert_file=None, parser='yaml', ssl_verify=True, cache_enabled=True,
+        cert_file=None, ssl_verify=True, cache_enabled=True,
         cache_file='/tmp/pypuppet_cache', cache_backend='sqlite', cache_expire_after=3600):
 
         if cache_enabled:
@@ -13,7 +13,7 @@ class Puppet(object):
             requests_cache.install_cache(cache_file, backend=cache_backend, expire_after=cache_expire_after)
 
         self.requestor = Requestor(host=host, port=port, key_file=key_file, 
-            cert_file=cert_file, parser=parser, ssl_verify=ssl_verify)
+            cert_file=cert_file, ssl_verify=ssl_verify)
 
     def certificates(self):
         """List certnames of known SSL certificates"""
@@ -48,7 +48,7 @@ class Puppet(object):
             else:
                 raise ValueError("facts_search term should have 2 or 3 elements")
             query.append('facts.' + fact + '.' + comparison + '=' + str(value))
-        return self.requestor.get('facts_search', 'search?' + '&'.join(query))
+        return str(self.requestor.get('facts_search', 'search?' + '&'.join(query)))
 
     def node(self, certname, environment='production'):
         """Create Puppet Node object"""

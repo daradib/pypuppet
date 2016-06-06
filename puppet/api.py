@@ -2,7 +2,6 @@ import urllib2
 import requests
 import yaml
 from httplib import HTTPSConnection
-from json import load as load_json
 
 class APIError(Exception):
     """Error returned by Puppet REST API"""
@@ -27,33 +26,33 @@ def load_yaml(stream):
     return document
 
 class Requestor(object):
-    def __init__(self, host, port, key_file, cert_file, parser, ssl_verify):
+    def __init__(self, host, port, key_file, cert_file, ssl_verify):
         self.endpoint = 'https://' + host + ':' + str(port)
         self.key_file = key_file
         self.cert_file = cert_file
-        self.parser = parser
         self.ssl_verify = ssl_verify
-        self._session = requests.Session()
-        self._session.headers = {
-            'Accept':parser
-        }
-    def get(self, resource, key='no_key', environment='production'):
+
+    def get(self, resource, key='no_key', environment='production', parser='yaml'):
         """Query Puppet information using REST API and client SSL cert"""
         url = '/'.join((self.endpoint, environment, resource, key))
+        _session = requests.Session()
+        _session.headers = {
+            'Accept':parser
+        }
 
         try:
-            req = self._session.get(url, cert=(self.cert_file, self.key_file), verify=self.ssl_verify)
+            req = _session.get(url, cert=(self.cert_file, self.key_file), verify=self.ssl_verify)
 
             if req.status_code == 200:
-                if self.parser == 'yaml':
+                if parser == 'yaml':
                     value = load_yaml(req.text)
-                elif self.parser == 'pson':
-                    value = load_json(req.text)
+                elif parser == 'pson':
+                    value = req.json()
                 else:
-                    value = req.text
+                    value = str(req.text).rstrip()
             else:
                 value = req.text
         except:
-            pass
+            value = req.text
 
         return value
