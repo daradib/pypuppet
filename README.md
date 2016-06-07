@@ -25,7 +25,7 @@ By default, the Puppet instance will use an unauthenticated SSL connection to lo
     ... cache_backend='sqlite',
     ... cache_expire_after=3600)
 
-Replace puppet.example.com with the hostname of the puppet master and api-key.pem/api-cert.pem with the client SSL key/certificate files.
+Replace puppetmaster.foo.com with the hostname of the puppet master and api-key.pem/api-cert.pem with the client SSL key/certificate files.
 SSL verification is enabled by default.
 Cache is enabled by default with multiple backend options (sqlite (default), memory, mongodb, redis). Default cache file will be stored at /tmp/pypuppet_cache.sqlite
 
