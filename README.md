@@ -41,7 +41,7 @@ Given a puppet node called puppetnode.foo.com,
 
 An optional node environment argument can be provided. Note that [external node classifiers](http://docs.puppetlabs.com/guides/external_nodes.html) may [override the requested environment](http://docs.puppetlabs.com/guides/environment.html#in-an-enc).
 
-    >>> n_dev = p.node('puppetnode.foo.com', environment='production')
+    >>> n_prod = p.node('puppetnode.foo.com', environment='production')
 
 If a node is not found, `puppet.APIError` will be raised.
 
