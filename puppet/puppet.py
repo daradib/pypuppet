@@ -8,12 +8,10 @@ class Puppet(object):
         cert_file=None, ssl_verify=True, cache_enabled=True,
         cache_file='/tmp/pypuppet_cache', cache_backend='sqlite', cache_expire_after=3600):
 
-        if cache_enabled:
-            import requests_cache
-            requests_cache.install_cache(cache_file, backend=cache_backend, expire_after=cache_expire_after)
-
         self.requestor = Requestor(host=host, port=port, key_file=key_file, 
-            cert_file=cert_file, ssl_verify=ssl_verify)
+            cert_file=cert_file, ssl_verify=ssl_verify, cache=cache_enabled,
+            cache_file=cache_file, cache_backend=cache_backend,
+            cache_expire_after=cache_expire_after)
 
     def certificates(self):
         """List certnames of known SSL certificates"""

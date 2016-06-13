@@ -26,19 +26,29 @@ def load_yaml(stream):
     return document
 
 class Requestor(object):
-    def __init__(self, host, port, key_file, cert_file, ssl_verify):
+    def __init__(self, host, port, key_file, cert_file, ssl_verify,
+        cache, cache_file, cache_backend, cache_expire_after):
+
         self.endpoint = 'https://' + host + ':' + str(port)
         self.key_file = key_file
         self.cert_file = cert_file
         self.ssl_verify = ssl_verify
+        self.cache = cache
+        self.cache_file = cache_file
+        self.cache_backend = cache_backend
+        self.cache_expire_after = cache_expire_after
 
     def get(self, resource, key='no_key', environment='production', parser='yaml'):
         """Query Puppet information using REST API and client SSL cert"""
         url = '/'.join((self.endpoint, environment, resource, key))
-        _session = requests.Session()
-        _session.headers = {
-            'Accept':parser
-        }
+        if self.cache:
+            import requests_cache
+            _session = requests_cache.CachedSession(cache_name=self.cache_file,
+                backend=self.cache_backend, expire_after=self.cache_expire_after)
+        else:
+            _session = requests.Session()
+
+        _session.headers = {'Accept':parser}
 
         try:
             req = _session.get(url, cert=(self.cert_file, self.key_file), verify=self.ssl_verify)
