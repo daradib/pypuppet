@@ -1,7 +1,7 @@
 import urllib2
+import requests
 import yaml
 from httplib import HTTPSConnection
-from json import load as load_json
 
 class APIError(Exception):
     """Error returned by Puppet REST API"""
@@ -25,42 +25,44 @@ def load_yaml(stream):
             raise
     return document
 
-class HTTPSClientAuthHandler(urllib2.HTTPSHandler):
-    """urllib2 does not natively support HTTPS client authentication"""
-    def __init__(self, key, cert):
-        urllib2.HTTPSHandler.__init__(self)
-        self.key = key
-        self.cert = cert
-    def https_open(self, req):
-        return self.do_open(self.getConnection, req)
-    def getConnection(self, host, timeout=300):
-        return HTTPSConnection(host, key_file=self.key, cert_file=self.cert)
-
 class Requestor(object):
-    def __init__(self, host, port, key_file, cert_file):
+    def __init__(self, host, port, key_file, cert_file, ssl_verify,
+        cache, cache_file, cache_backend, cache_expire_after):
+
         self.endpoint = 'https://' + host + ':' + str(port)
-        self.opener = urllib2.build_opener(HTTPSClientAuthHandler(
-            key_file, cert_file))
+        self.key_file = key_file
+        self.cert_file = cert_file
+        self.ssl_verify = ssl_verify
+        self.cache = cache
+        self.cache_file = cache_file
+        self.cache_backend = cache_backend
+        self.cache_expire_after = cache_expire_after
+
     def get(self, resource, key='no_key', environment='production', parser='yaml'):
         """Query Puppet information using REST API and client SSL cert"""
         url = '/'.join((self.endpoint, environment, resource, key))
-        request = urllib2.Request(url)
-        request.add_header('Accept', parser)
+        if self.cache:
+            import requests_cache
+            _session = requests_cache.CachedSession(cache_name=self.cache_file,
+                backend=self.cache_backend, expire_after=self.cache_expire_after)
+        else:
+            _session = requests.Session()
+
+        _session.headers = {'Accept':parser}
+
         try:
-            try:
-                response = self.opener.open(request)
-            except urllib2.HTTPError as e:
-                    raise APIError((str(e) + ": " + url))
-            if parser == 'yaml':
-                value = load_yaml(response)
-            elif parser == 'pson':
-                value = load_json(response)
+            req = _session.get(url, cert=(self.cert_file, self.key_file), verify=self.ssl_verify)
+
+            if req.status_code == 200:
+                if parser == 'yaml':
+                    value = load_yaml(req.text)
+                elif parser == 'pson':
+                    value = req.json()
+                else:
+                    value = str(req.text).rstrip()
             else:
-                value = response.read()
-        finally:
-            try:
-                response.close()
-            except NameError:
-                # HTTPError would be raised, don't preempt it
-                pass
+                value = req.text
+        except:
+            value = req.text
+
         return value

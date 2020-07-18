@@ -8,7 +8,7 @@ setup(name='pypuppet',
       author='Dara Adib',
       author_email='daradib@kloudless.com',
       url='http://github.com/daradib/pypuppet',
-      requires=['yaml'],
+      requires=['yaml','requests','requests_cache'],
       classifiers=[
           'Development Status :: 2 - Pre-Alpha',
           'Intended Audience :: Developers',

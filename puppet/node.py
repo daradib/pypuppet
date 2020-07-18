@@ -1,6 +1,3 @@
-from .utils import Lazy, Memoize
-
-@Memoize
 class Node:
     """Puppet Node object with some lazy-evaluated attributes"""
 
@@ -24,17 +21,13 @@ class Node:
     def catalog(self):
         """Compile and download the node's catalog"""
         # Catalog is not parsable by PyYAML, use JSON instead
-        return self.requestor.get(
-            'catalog', self.certname, environment=self.environment,
-            parser='pson')['data']
+        return self.requestor.get('catalog', self.certname,
+            environment=self.environment, parser='pson')['data']
 
-    @Lazy
     def certificate(self):
-        return str(self.requestor.get(
-            'certificate', self.certname, environment=self.environment,
-            parser='s'))
+        return str(self.requestor.get('certificate', self.certname,
+            environment=self.environment, parser='s'))
 
-    @Lazy
     def certificate_status(self):
         # YAML output is not as useful as PSON
         return str(self.requestor.get('certificate_status', self.certname,

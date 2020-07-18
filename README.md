@@ -2,7 +2,7 @@
 
 Python wrapper for Puppet REST API
 
-This package wraps the [Puppet REST API](http://docs.puppetlabs.com/guides/rest_api.html) to make it easier for Python scripts to integrate with Puppet. Lazy evaluation and memoization is used to reduce calls to the API.
+This package wraps the [Puppet REST API](http://docs.puppetlabs.com/guides/rest_api.html) to make it easier for Python scripts to integrate with Puppet. Persistent cache is used to reduce calls to the API.
 
 Testing, feedback, and pull requests are welcome.
 
@@ -15,36 +15,45 @@ Kudos to my employer, [Kloudless](http://kloudless.com/), for giving me permissi
 
 By default, the Puppet instance will use an unauthenticated SSL connection to localhost. A better example would be to use client authentication.
 
-    >>> p = puppet.Puppet(host='puppet.example.com', port=8140,
-    ... key_file='api-key.pem', cert_file='api-cert.pem')
+    >>> p = puppet.Puppet(host='puppetmaster.foo.com',
+    ... port=8140,
+    ... key_file='/tmp/api-key.pem',
+    ... cert_file='/tmp/api-cert.pem',
+    ... ssl_verify=True,
+    ... cache_enabled=True,
+    ... cache_file='/tmp/pypuppet_cache',
+    ... cache_backend='sqlite',
+    ... cache_expire_after=3600)
 
-Replace puppet.example.com with the hostname of the puppet master and api-key.pem/api-cert.pem with the client SSL key/certificate files.
+Replace puppetmaster.foo.com with the hostname of the puppet master and api-key.pem/api-cert.pem with the client SSL key/certificate files.
+SSL verification is enabled by default.
+Cache is enabled by default with multiple backend options (sqlite (default), memory, mongodb, redis). Default cache file will be stored at /tmp/pypuppet_cache.sqlite
 
 ### Node object
 
-Given a puppet node called magicsmoke.example.com,
+Given a puppet node called puppetnode.foo.com,
 
-    >>> n = p.node('magicsmoke.example.com')
+    >>> n = p.node('puppetnode.foo.com')
     >>> str(n)
-    'magicsmoke.example.com'
+    'puppetnode.foo.com'
     >>> dir(n)
     ['__doc__', '__init__', '__module__', '__str__', 'catalog', 'certificate', 'certificate_status', 'certname', 'classes', 'environment', 'facts', 'node', 'parameters', 'requestor']
 
 An optional node environment argument can be provided. Note that [external node classifiers](http://docs.puppetlabs.com/guides/external_nodes.html) may [override the requested environment](http://docs.puppetlabs.com/guides/environment.html#in-an-enc).
 
-    >>> n_dev = p.node('magicsmoke.example.com', environment='dev')
+    >>> n_prod = p.node('puppetnode.foo.com', environment='production')
 
 If a node is not found, `puppet.APIError` will be raised.
 
 #### `certname`
 
     >>> n.certname
-    'magicsmoke.example.com'
+    'puppetnode.foo.com'
 
 #### `classes`
 
     >>> type(n.classes)
-    <type 'list'>
+    <type 'dict'>
 
 #### `environment`
 
@@ -56,7 +65,7 @@ If a node is not found, `puppet.APIError` will be raised.
     >>> type(n.facts)
     <type 'dict'>
     >>> n.facts['osfamily'] + "-" + n.facts['architecture']
-    'Debian-amd64'
+    'RedHat-x86_64'
 
 #### `node`
 
@@ -73,15 +82,15 @@ If a node is not found, `puppet.APIError` will be raised.
 #### `certificate`
 *lazy-evaluated*
 
-    >>> type(n.certificate)
+    >>> type(n.certificate())
     <type 'str'>
-    >>> n.certificate.startswith('-----BEGIN CERTIFICATE')
+    >>> n.certificate().startswith('-----BEGIN CERTIFICATE')
     True
 
 #### `certificate_status`
 *lazy-evaluated*
 
-    >>> n.certificate_status
+    >>> n.certificate_status()
     'signed'
 
 #### `catalog`
@@ -128,12 +137,12 @@ Each argument (if provided) of `facts_search` must have two or three elements. T
 
 ### Requestor object
 
-Direct invocation of the API can be done using the Requestor object's `get` method, which takes four arguments:
+Direct invocation of the API can be done using the Requestor object's `get` method, which takes three arguments:
 
  * `resource` (required)
  * `key` (default: `'no_key'`)
  * `environment` (default: `'production'`)
- * `parser`: `yaml` (default), `pson`, or `s`
+ * `parser` (default: `'s'`)
 
 For example:
 
@@ -168,11 +177,6 @@ To allow access to the REST API, the puppet master [auth.conf](http://docs.puppe
 
 ## Caveats
 
-Bugs:
-
- * Memoization is rudimentary. Stale information is kept indefinitely (in the current Python process).
- * There is no verification of the server SSL certificate.
-
 Not currently supported:
 
  * PUT requests (sending and signing certificate requests, sending facts and reports, putting files in the file bucket) and DELETE requests (revoking certificate requests)
@@ -180,6 +184,10 @@ Not currently supported:
 ## Author
 
 [Dara Adib](http://github.com/daradib/) for [Kloudless, Inc.](http://kloudless.com/)
+
+## Contributors
+
+[Ruslan Valiyev](http://github.com/norus/)
 
 ## License
 
