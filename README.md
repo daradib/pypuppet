@@ -2,7 +2,7 @@
 
 Python wrapper for Puppet REST API
 
-This package wraps the [Puppet REST API](http://docs.puppetlabs.com/guides/rest_api.html) to make it easier for Python scripts to integrate with Puppet. Lazy evaluation and memoization is used to reduce calls to the API.
+This package wraps the [Puppet REST API](https://puppet.com/docs/puppetdb/latest/api/index.html) to make it easier for Python scripts to integrate with Puppet. Lazy evaluation and memoization is used to reduce calls to the API.
 
 Testing, feedback, and pull requests are welcome.
 
@@ -30,7 +30,7 @@ Given a puppet node called magicsmoke.example.com,
     >>> dir(n)
     ['__doc__', '__init__', '__module__', '__str__', 'catalog', 'certificate', 'certificate_status', 'certname', 'classes', 'environment', 'facts', 'node', 'parameters', 'requestor']
 
-An optional node environment argument can be provided. Note that [external node classifiers](http://docs.puppetlabs.com/guides/external_nodes.html) may [override the requested environment](http://docs.puppetlabs.com/guides/environment.html#in-an-enc).
+An optional node environment argument can be provided. Note that [external node classifiers](https://puppet.com/docs/puppet/latest/nodes_external.html#external-node-classifiers) may [override the requested environment](https://puppet.com/docs/puppet/latest/nodes_external.html#comparing_encs_and_node_definitions).
 
     >>> n_dev = p.node('magicsmoke.example.com', environment='dev')
 
@@ -119,7 +119,7 @@ However, each string can be directly passed as the argument to the node method t
     >>> dir(n_) == dir(n)
     True
 
-Each argument (if provided) of `facts_search` must have two or three elements. The first argument is the name of the fact and the last argument is the string for comparison. If three arguments are provided, the second argument is the comparison type. The arguments are combined with boolean AND. Refer to the Puppet REST API documentation on [facts search](http://docs.puppetlabs.com/guides/rest_api.html#facts-search).
+Each argument (if provided) of `facts_search` must have two or three elements. The first argument is the name of the fact and the last argument is the string for comparison. If three arguments are provided, the second argument is the comparison type. The arguments are combined with boolean AND. Refer to the Puppet REST API documentation on [facts search](https://puppet.com/docs/puppetdb/latest/api/query/v4/facts.html).
 
     >>> if p.facts_search(('architecture', 'amd64'),('osfamily', 'Debian')):
     ...     print True
@@ -143,7 +143,7 @@ For example:
     >>> crl.startswith('-----BEGIN X509 CRL')
     True
 
-Some other examples based on the [Puppet REST API documentation](http://docs.puppetlabs.com/guides/rest_api.html):
+Some other examples based on the [Puppet REST API documentation](https://puppet.com/docs/puppetdb/latest/api/query/v4/facts.html):
 
     p.requestor.get('resource', 'package/puppet')
     p.requestor.get('resources', 'user')
@@ -164,7 +164,7 @@ Replace api with another certname if desired.
 
 This will generate `$vardir/ssl/private_keys/api.pem` and `$vardir/ssl/certs/api.pem`, which should be moved or otherwise made accessible to the user and host using pypuppet, if necessary. On Debian, `$vardir` defaults to `/var/lib/puppet`.
 
-To allow access to the REST API, the puppet master [auth.conf](http://docs.puppetlabs.com/guides/rest_auth_conf.html) file needs to be changed. `auth.conf.example` is included in this directory as an example.
+To allow access to the REST API, the puppet master [auth.conf](https://puppet.com/docs/puppetserver/latest/config_file_auth.html) file needs to be changed. `auth.conf.example` is included in this directory as an example.
 
 ## Caveats
 
