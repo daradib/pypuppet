@@ -18,6 +18,6 @@ setup(name='pypuppet',
           'Programming Language :: Python',
           'Programming Language :: Python :: 2.7',
           'Topic :: System :: Systems Administration',
-          ],
+      ],
       packages=['puppet'],
       )

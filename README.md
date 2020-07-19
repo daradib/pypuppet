@@ -15,40 +15,40 @@ Kudos to my employer, [Kloudless](http://kloudless.com/), for giving me permissi
 
 By default, the Puppet instance will use an unauthenticated SSL connection to localhost. A better example would be to use client authentication.
 
-    >>> p = puppet.Puppet(host='puppetmaster.foo.com',
+    >>> p = puppet.Puppet(host='puppetmaster.example.com',
     ... port=8140,
-    ... key_file='/tmp/api-key.pem',
-    ... cert_file='/tmp/api-cert.pem',
+    ... key_file='api-key.pem',
+    ... cert_file='api-cert.pem',
     ... ssl_verify=True,
     ... cache_enabled=True,
-    ... cache_file='/tmp/pypuppet_cache',
+    ... cache_file='pypuppet_cache',
     ... cache_backend='sqlite',
     ... cache_expire_after=3600)
 
-Replace puppetmaster.foo.com with the hostname of the puppet master and api-key.pem/api-cert.pem with the client SSL key/certificate files.
+Replace puppetmaster.example.com with the hostname of the puppet master and api-key.pem/api-cert.pem with the client SSL key/certificate files.
 SSL verification is enabled by default.
-Cache is enabled by default with multiple backend options (sqlite (default), memory, mongodb, redis). Default cache file will be stored at /tmp/pypuppet_cache.sqlite
+Cache is enabled by default with multiple backend options (sqlite (default), memory, mongodb, redis). Default cache file will be stored at `pypuppet_cache.sqlite`.
 
 ### Node object
 
-Given a puppet node called puppetnode.foo.com,
+Given a puppet node called puppetnode.example.com,
 
-    >>> n = p.node('puppetnode.foo.com')
+    >>> n = p.node('puppetnode.example.com')
     >>> str(n)
-    'puppetnode.foo.com'
+    'puppetnode.example.com'
     >>> dir(n)
     ['__doc__', '__init__', '__module__', '__str__', 'catalog', 'certificate', 'certificate_status', 'certname', 'classes', 'environment', 'facts', 'node', 'parameters', 'requestor']
 
 An optional node environment argument can be provided. Note that [external node classifiers](http://docs.puppetlabs.com/guides/external_nodes.html) may [override the requested environment](http://docs.puppetlabs.com/guides/environment.html#in-an-enc).
 
-    >>> n_prod = p.node('puppetnode.foo.com', environment='production')
+    >>> n_prod = p.node('puppetnode.example.com', environment='production')
 
 If a node is not found, `puppet.APIError` will be raised.
 
 #### `certname`
 
     >>> n.certname
-    'puppetnode.foo.com'
+    'puppetnode.example.com'
 
 #### `classes`
 

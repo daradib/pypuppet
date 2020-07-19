@@ -6,11 +6,13 @@ class APIError(Exception):
     """Error returned by Puppet REST API"""
     pass
 
+
 def load_yaml(stream):
     """Parse Puppet YAML into Python objects"""
     # Puppet YAML contains Ruby objects which need to be defined
     def construct_ruby_object(loader, suffix, node):
         return loader.construct_yaml_map(node)
+
     def construct_ruby_sym(loader, node):
         return loader.construct_yaml_str(node)
     yaml.add_multi_constructor('!ruby/object:', construct_ruby_object)
@@ -23,6 +25,7 @@ def load_yaml(stream):
         else:
             raise
     return document
+
 
 class Requestor(object):
     def __init__(self, host, port, key_file, cert_file, ssl_verify,
@@ -47,7 +50,7 @@ class Requestor(object):
         else:
             _session = requests.Session()
 
-        _session.headers = {'Accept':parser}
+        _session.headers = {'Accept': parser}
 
         try:
             req = _session.get(url, cert=(self.cert_file, self.key_file), verify=self.ssl_verify)

@@ -1,6 +1,7 @@
 from .api import Requestor
 from .node import Node
 
+
 class Puppet(object):
     """Python wrapper for Puppet REST API"""
 
@@ -8,7 +9,7 @@ class Puppet(object):
         cert_file=None, ssl_verify=True, cache_enabled=True,
         cache_file='/tmp/pypuppet_cache', cache_backend='sqlite', cache_expire_after=3600):
 
-        self.requestor = Requestor(host=host, port=port, key_file=key_file, 
+        self.requestor = Requestor(host=host, port=port, key_file=key_file,
             cert_file=cert_file, ssl_verify=ssl_verify, cache=cache_enabled,
             cache_file=cache_file, cache_backend=cache_backend,
             cache_expire_after=cache_expire_after)
