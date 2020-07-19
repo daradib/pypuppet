@@ -6,7 +6,7 @@ This package wraps the [Puppet REST API](https://puppet.com/docs/puppetdb/latest
 
 Testing, feedback, and pull requests are welcome.
 
-Kudos to my employer, [Kloudless](http://kloudless.com/), for giving me permission to publish this.
+Kudos to my employer, [Kloudless](https://kloudless.com/), for giving me permission to publish this.
 
 ## Usage
 
@@ -163,7 +163,7 @@ Install the module using pip.
 
     $ pip install https://github.com/daradib/pypuppet/archive/master.tar.gz
 
-Alternatively, you can move the puppet directory to your Python PATH or wherever a script that imports it will be located. The only dependency is [PyYAML](http://pyyaml.org/).
+Alternatively, you can move the puppet directory to your Python PATH or wherever a script that imports it will be located. The only dependency is [PyYAML](https://pyyaml.org/).
 
 The module defaults to using an unauthenticated SSL connection. You may want to create and use a client SSL key/certificate signed by the Puppet CA. On the puppet master (with root privileges):
 
@@ -183,11 +183,13 @@ Not currently supported:
 
 ## Author
 
-[Dara Adib](http://github.com/daradib/) for [Kloudless, Inc.](http://kloudless.com/)
+[Dara Adib](https://github.com/daradib/) for [Kloudless, Inc.](https://kloudless.com/)
 
 ## Contributors
 
-[Ruslan Valiyev](http://github.com/norus/)
+ * [Ruslan Valiyev](https://github.com/norus/)
+ * [Fabian van der Hoeven](https://github.com/Fabian1976)
+ * [Vlad Doster](https://github.com/vladdoster)
 
 ## License
 
@@ -204,4 +206,4 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
