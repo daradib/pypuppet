@@ -52,19 +52,16 @@ class Requestor(object):
 
         _session.headers = {'Accept': parser}
 
-        try:
-            req = _session.get(url, cert=(self.cert_file, self.key_file), verify=self.ssl_verify)
+        req = _session.get(url, cert=(self.cert_file, self.key_file), verify=self.ssl_verify)
 
-            if req.status_code == 200:
-                if parser == 'yaml':
-                    value = load_yaml(req.text)
-                elif parser == 'pson':
-                    value = req.json()
-                else:
-                    value = str(req.text).rstrip()
+        if req.status_code == 200:
+            if parser == 'yaml':
+                value = load_yaml(req.text)
+            elif parser == 'pson':
+                value = req.json()
             else:
-                value = req.text
-        except:
-            value = req.text
+                value = str(req.text).rstrip()
+        else:
+            raise APIError(req.text)
 
         return value
