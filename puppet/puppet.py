@@ -21,6 +21,12 @@ class Puppet(object):
             certnames.append(cert['name'])
         return certnames
 
+    def certificate_clean(self, key, environment='production'):
+        """Delete certificate of host"""
+        if not key:
+            raise ValueError("no certname given")
+        self.requestor.delete('certificate_status', key, environment)
+
     def certificate_requests(self):
         """List certnames of SSL certificate requests"""
         certnames = []
