@@ -179,7 +179,7 @@ To allow access to the REST API, the puppet master [auth.conf](https://puppet.co
 
 Not currently supported:
 
- * PUT requests (sending and signing certificate requests, sending facts and reports, putting files in the file bucket) and DELETE requests (revoking certificate requests)
+ * PUT requests (sending and signing certificate requests, sending facts and reports, putting files in the file bucket)
 
 ## Author
 
