@@ -131,7 +131,7 @@ However, each string can be directly passed as the argument to the node method t
 Each argument (if provided) of `facts_search` must have two or three elements. The first argument is the name of the fact and the last argument is the string for comparison. If three arguments are provided, the second argument is the comparison type. The arguments are combined with boolean AND. Refer to the Puppet REST API documentation on [facts search](http://docs.puppetlabs.com/guides/rest_api.html#facts-search).
 
     >>> if p.facts_search(('architecture', 'amd64'),('osfamily', 'Debian')):
-    ...     print True
+    ...     print(True)
     True
     >>> long_running_servers = p.facts_search(('uptime_days', 'gt', 100))
 
