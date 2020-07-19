@@ -65,21 +65,11 @@ class Requestor(object):
             raise APIError(req.text)
 
         return value
+
     def delete(self, resource, key='no_key', environment='production', parser='yaml'):
         """Delete entry from puppetserver"""
         url = '/'.join((self.endpoint, environment, resource, key))
-        request = urllib2.Request(url)
-        request.add_header('Accept', parser)
-        request.get_method = lambda: 'DELETE'
-        try:
-            try:
-                response = self.opener.open(request)
-            except urllib2.HTTPError as e:
-                    raise APIError((str(e) + ": " + url))
-        finally:
-            try:
-                response.close()
-            except NameError:
-                # HTTPError would be raised, don't preempt it
-                pass
-
+        _session = requests.Session()
+        req = _session.delete(url, cert=(self.cert_file, self.key_file), verify=self.ssl_verify)
+        if req.status_code != 200:
+            raise APIError(req.text)
