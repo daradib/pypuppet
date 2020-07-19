@@ -47,7 +47,7 @@ class Puppet(object):
             else:
                 raise ValueError("facts_search term should have 2 or 3 elements")
             query.append('facts.' + fact + '.' + comparison + '=' + str(value))
-        return str(self.requestor.get('facts_search', 'search?' + '&'.join(query)))
+        return self.requestor.get('facts_search', 'search?' + '&'.join(query))
 
     def node(self, certname, environment='production'):
         """Create Puppet Node object"""
