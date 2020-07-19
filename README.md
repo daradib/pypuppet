@@ -137,12 +137,12 @@ Each argument (if provided) of `facts_search` must have two or three elements. T
 
 ### Requestor object
 
-Direct invocation of the API can be done using the Requestor object's `get` method, which takes three arguments:
+Direct invocation of the API can be done using the Requestor object's `get` method, which takes four arguments:
 
  * `resource` (required)
  * `key` (default: `'no_key'`)
  * `environment` (default: `'production'`)
- * `parser` (default: `'s'`)
+ * `parser` `'yaml'` (default), `'pson'`, or `'s'`
 
 For example:
 
