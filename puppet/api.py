@@ -1,7 +1,6 @@
-import urllib2
 import requests
 import yaml
-from httplib import HTTPSConnection
+
 
 class APIError(Exception):
     """Error returned by Puppet REST API"""
