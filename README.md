@@ -80,7 +80,7 @@ If a node is not found, `puppet.APIError` will be raised.
     <type 'dict'>
 
 #### `certificate`
-*lazy-evaluated*
+*method*
 
     >>> type(n.certificate())
     <type 'str'>
@@ -88,7 +88,7 @@ If a node is not found, `puppet.APIError` will be raised.
     True
 
 #### `certificate_status`
-*lazy-evaluated*
+*method*
 
     >>> n.certificate_status()
     'signed'

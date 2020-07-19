@@ -1,5 +1,5 @@
 class Node:
-    """Puppet Node object with some lazy-evaluated attributes"""
+    """Puppet Node object with some cached attributes"""
 
     def __init__(self, requestor, certname, environment):
         self.requestor = requestor
@@ -35,7 +35,6 @@ class Node:
 
     # TODO: Need to use REST API instead of looking at files on puppetmaster
     # Unfortunately, REST API only supports PUT for reports, not GET
-    # @Lazy
     # def report(self):
     #     # Puppet API does not implement getting reports, use local disk
     #     path = '/'.join(('/var/lib/puppet', 'reports', self.certname))
